@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tela de Login</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #0d1117;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 350px;
+    background: #161b22;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    color: #fff;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #007bff;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h2>Login</h2>
+  <input type="text" id="user" placeholder="Seu nome de usuário" />
+  <button onclick="entrar()">Entrar</button>
+</div>
+
+<script>
+function entrar() {
+  const user = document.getElementById("user").value.trim();
+
+  if (user === "") {
+    alert("Digite seu usuário!");
+    return;
+  }
+
+  // Salvar o nome do usuário e abrir tela de sucesso
+  localStorage.setItem("user", user);
+  window.location.href = "sucesso.html";
+}
+</script>
+
+</body>
+</html>
