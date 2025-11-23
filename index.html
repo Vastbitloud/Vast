@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cadastro & Login</title>
+
+<style>
+  body{
+    margin:0;
+    background:#0a0f1a;
+    font-family:Arial, sans-serif;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:20px;
+  }
+  .card{
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+    width:100%;
+    max-width:420px;
+    box-shadow:0 0 20px #00000080;
+  }
+  h2{margin:0 0 15px 0; text-align:center;}
+  label{font-size:14px;opacity:.8;}
+  input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:12px;
+    border-radius:8px;
+    border:none;
+    background:#1f2937;
+    color:white;
+  }
+  button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#06b6d4;
+    color:#001219;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:5px;
+  }
+  .link{
+    text-align:center;
+    margin-top:12px;
+    color:#06b6d4;
+    cursor:pointer;
+  }
+  .hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- TELA DE LOGIN -->
+  <div id="loginScreen">
+    <h2>Entrar</h2>
+    <label>Usuário</label>
+    <input id="loginUser" type="text" placeholder="Seu usuário">
+    <label>Senha</label>
+    <input id="loginPass" type="password" placeholder="Sua senha">
+    <button onclick="login()">Entrar</button>
+    <div class="link" onclick="showRegister()">Criar conta</div>
+  </div>
+
+  <!-- TELA DE CADASTRO -->
+  <div id="registerScreen" class="hidden">
+    <h2>Criar conta</h2>
+    <label>Usuário</label>
+    <input id="regUser" type="text" placeholder="Escolha um usuário">
+    <label>Senha</label>
+    <input id="regPass" type="password" placeholder="Criar senha (min 6)">
+    <button onclick="register()">Cadastrar</button>
+    <div class="link" onclick="showLogin()">Já tenho conta</div>
+  </div>
+
+  <!-- TELA DE SUCESSO -->
+  <div id="successScreen" class="hidden">
+    <h2>Login Realizado com Sucesso!</h2>
+
+    <p style="margin-top:15px; line-height:22px;">
+      📬 <b>Como liberar seu bônus:</b><br><br>
+      Após fazer suas indicações, me chame no PV e envie:
+      <br><br>
+      1️⃣ Seu nome de usuário<br>
+      2️⃣ O nome de usuário dos seus convidados<br><br>
+      Assim faço a validação e libero o seu bônus de convite.
+    </p>
+
+    <button onclick="logout()" style="margin-top:20px;">Sair</button>
+  </div>
+
+</div>
+
+<script>
+  // Salvar e carregar dados
+  function loadUsers(){ return JSON.parse(localStorage.getItem("users") || "{}"); }
+  function saveUsers(u){ localStorage.setItem("users", JSON.stringify(u)); }
+  function setSession(u){ localStorage.setItem("session", u); }
+  function getSession(){ return localStorage.getItem("session"); }
+  function clearSession(){ localStorage.removeItem("session"); }
+
+  // Exibir telas
+  function showLogin(){
+    loginScreen.classList.remove("hidden");
+    registerScreen.classList.add("hidden");
+    successScreen.classList.add("hidden");
+  }
+  function showRegister(){
+    registerScreen.classList.remove("hidden");
+    loginScreen.classList.add("hidden");
+    successScreen.classList.add("hidden");
+  }
+  function showSuccess(){
+    successScreen.classList.remove("hidden");
+    loginScreen.classList.add("hidden");
+    registerScreen.classList.add("hidden");
+  }
+
+  // Cadastro
+  function register(){
+    const user = regUser.value.trim();
+    const pass = regPass.value;
+
+    if(user === "" || pass.length < 6){
+      alert("Usuário vazio ou senha menor que 6 caracteres!");
+      return;
+    }
+
+    const users = loadUsers();
+    if(users[user]){
+      alert("Esse usuário já existe!");
+      return;
+    }
+
+    users[user] = pass;
+    saveUsers(users);
+
+    alert("Conta criada com sucesso! Faça login.");
+    showLogin();
+  }
+
+  // Login
+  function login(){
+    const user = loginUser.value.trim();
+    const pass = loginPass.value;
+
+    const users = loadUsers();
+
+    if(!users[user]){
+      alert("Usuário não encontrado!");
+      return;
+    }
+    if(users[user] !== pass){
+      alert("Senha incorreta!");
+      return;
+    }
+
+    setSession(user);
+    showSuccess();
+  }
+
+  // Logout
+  function logout(){
+    clearSession();
+    showLogin();
+  }
+
+  // Auto-login
+  window.onload = () => {
+    if(getSession()) showSuccess();
+  };
+</script>
+
+</body>
+</html>
